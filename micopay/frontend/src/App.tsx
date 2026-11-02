@@ -6,6 +6,7 @@ import WalletLogin from './pages/WalletLogin';
 import WebSessionGuard from './components/WebSessionGuard';
 import WebShell, { type WebNavItem } from './components/WebShell';
 import WebScanDialog from './components/WebScanDialog';
+import WebNotifications from './components/WebNotifications';
 import {
   HashRouter,
   Routes,
@@ -1672,6 +1673,10 @@ function App() {
               {/* Se oculta solo cuando hay conexión y no hay nada pendiente. */}
               <OfflineQueueStatus token={sessionUser?.token ?? null} />
               <PushNotificationsBridge />
+              {/* WP8: en PC no hay push; los avisos salen de aqui. */}
+              {IS_EXTERNAL_SIGNER && sessionUser?.token && sessionUser.id && (
+                <WebNotifications token={sessionUser.token} userId={sessionUser.id} />
+              )}
               <Routes>
                 <Route path="/login" element={IS_EXTERNAL_SIGNER ? <WalletLogin onLoginSuccess={handleLoginSuccess} /> : <Login onLoginSuccess={handleLoginSuccess} />} />
                 <Route path="/register" element={IS_EXTERNAL_SIGNER ? <Navigate to="/login" replace /> : <Register onLoginSuccess={handleLoginSuccess} />} />
